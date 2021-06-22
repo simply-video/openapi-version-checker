@@ -23,12 +23,10 @@ jobs:
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, uses the default branch.
           ref: 'main'
-      - run: mkdir -p ./local/main && cp -p ./reference/*.yaml ./local/main/
+      - run: cp -p ./reference/api.v1.yaml ./api.v1-prod.yaml
       - uses: actions/checkout@v2
-      - run: mkdir -p ./local/current && cp -p ./reference/*.yaml ./local/current/
       - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: ls ./local
-      - run: npx openapi-diff ./local/current/api.v1.yaml ./local/main/api.v1.yaml
+      - run: npx openapi-diff ./reference/api.v1.yaml ./api.v1-prod.yaml
