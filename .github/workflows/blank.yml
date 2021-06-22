@@ -30,7 +30,7 @@ jobs:
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, uses the default branch.
           ref: 'main'
-      - run: mkdir -p ./local/current/ && cp -p ./reference/*.yaml ./local/ref/current/
+      - run: mkdir -p ./local/current/ && cp -p ./reference/*.yaml ./local/current/
       - name: Setup node
         uses: actions/setup-node@v2
         with:
