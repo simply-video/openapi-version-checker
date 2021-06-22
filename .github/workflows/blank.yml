@@ -37,4 +37,4 @@ jobs:
         with:
           name: prod
           path: ./artifacts
-      - run: npx openapi-diff ./reference/api.v1.yaml ./artifacts/api.v1-prod.yaml
+      - run: npx openapi-diff ./reference/api.v1.yaml ./artifacts/api.v1.yaml
