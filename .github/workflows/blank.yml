@@ -37,4 +37,5 @@ jobs:
         with:
           name: prod
           path: ./api.v1-prod.yaml
+      - run: chmod 0444 ./api.v1-prod.yaml
       - run: npx openapi-diff ./reference/api.v1.yaml ./api.v1-prod.yaml
