@@ -23,10 +23,17 @@ jobs:
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, uses the default branch.
           ref: 'main'
-      - run: cp -p ./reference/api.v1.yaml ./api.v1-prod.yaml
+      - uses: actions/upload-artifact@v2
+        with:
+          name: prod
+          path: |
+            ./reference/api.v1.yaml
       - uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: 14
+      - uses: actions/download-artifact@v2
+        with:
+          name: prod
       - run: npx openapi-diff ./reference/api.v1.yaml ./api.v1-prod.yaml
