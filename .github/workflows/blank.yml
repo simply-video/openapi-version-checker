@@ -36,6 +36,5 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: prod
-          path: ./api.v1-prod.yaml
-      - run: chmod 777 ./api.v1-prod.yaml
-      - run: npx openapi-diff ./reference/api.v1.yaml ./api.v1-prod.yaml
+          path: ./artifacts
+      - run: npx openapi-diff ./reference/api.v1.yaml ./artifacts/api.v1-prod.yaml
