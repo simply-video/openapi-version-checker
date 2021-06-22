@@ -23,14 +23,14 @@ jobs:
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, uses the default branch.
           ref: 'main'
-      - run: cp -p ./reference/*.yaml /local/main
+      - run: cp -p ./reference/*.yaml /local/main/
       - uses: actions/checkout@v2
         with:
           # The branch, tag or SHA to checkout. When checking out the repository that
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, uses the default branch.
           ref: 'main'
-      - run: cp -p ./reference/*.yaml /local/ref/current
+      - run: cp -p ./reference/*.yaml /local/ref/current/
       - name: Setup node
         uses: actions/setup-node@v2
         with:
