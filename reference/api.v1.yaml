@@ -14,7 +14,7 @@ servers:
 tags: 
   - name: ''
 paths:
-  /pets:
+  /something:
     get:
       description: 'sssss'
       summary: List all pets
