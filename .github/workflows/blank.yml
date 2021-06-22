@@ -30,4 +30,5 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14
+      - run: ls ./local/main/
       - run: npx openapi-diff ./local/current/api.v1.yaml ./local/main/api.v1.yaml
