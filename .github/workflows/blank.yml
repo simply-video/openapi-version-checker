@@ -25,7 +25,7 @@ jobs:
           ref: 'main'
       - run: mkdir -p ./local/main/ && cp -p ./reference/*.yaml ./local/main/
       - uses: actions/checkout@v2
-      - run: mkdir -p ./local/current/ && cp -p ./reference/*.yaml ./local/current/
+      - run: mkdir ./local/current/ && cp -p ./reference/*.yaml ./local/current/
       - name: Setup node
         uses: actions/setup-node@v2
         with:
