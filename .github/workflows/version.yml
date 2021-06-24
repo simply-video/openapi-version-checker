@@ -26,13 +26,12 @@ jobs:
           ref: main
           path: prod
       - name: Run OpenAPI Diff (from CURRENT revision)
-        continue-on-error: true
         uses: mvegter/openapi-diff-action@v0.23.3
         with:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
       - name: Get PROD Version From .ENV
-        
+        if: ${{ failure() }}
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
