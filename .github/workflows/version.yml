@@ -39,23 +39,26 @@ jobs:
           path: prod/.env
         id: prod-dotenv
       - name: Bump release version
+        if: ${{ failure() }}
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.prod-dotenv.outputs.version }}
           version-fragment: 'major'
       - name: Get CURRENT Version From .ENV
+        if: ${{ failure() }}
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
           path: current/.env
         id: curr-dotenv
       - name: SEMVER STRING
+        if: ${{ failure() }}
         uses: actions-ecosystem/action-regex-match@v2
         id: regex-match
         with:
           text: ${{ github.event.comment.body }}
           regex: '^([${{ steps.bump_version.outputs.next-version }}]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$'
       - name: Version Is correct
-        if: ${{ steps.regex-match.outputs.match != '' }}
+        if: ${{ failure() }} && ${{ steps.regex-match.outputs.match != '' }}
         run: echo "::error::Version in .env is incorrect. Should be set to ${{ steps.bump_version.outputs.next-version }}"
