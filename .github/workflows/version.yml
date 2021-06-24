@@ -60,5 +60,5 @@ jobs:
           text: ${{ steps.curr-dotenv.outputs.version }}
           regex: '^([${{ steps.bump_version.outputs.next-version }}]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$'
       - name: Version Is correct
-        if: ${{ steps.regex-match.outputs.match != '' }}
+        if: ${{ steps.regex-match.outputs.match == '' }}
         run: exit 1
