@@ -8,7 +8,6 @@ on:
   # push:
   #   branches: [develop]
   pull_request:
-    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -27,38 +26,39 @@ jobs:
           ref: main
           path: prod
       - name: Run OpenAPI Diff (from CURRENT revision)
+        continue-on-error: true
         uses: mvegter/openapi-diff-action@v0.23.3
         with:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
       - name: Get PROD Version From .ENV
-        if: ${{ failure() }}
+        
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
           path: prod/.env
         id: prod-dotenv
       - name: Bump release version
-        if: ${{ failure() }}
+        
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.prod-dotenv.outputs.version }}
           version-fragment: 'major'
       - name: Get CURRENT Version From .ENV
-        if: ${{ failure() }}
+        
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
           path: current/.env
         id: curr-dotenv
       - name: SEMVER STRING
-        if: ${{ failure() }}
+        
         uses: actions-ecosystem/action-regex-match@v2
         id: regex-match
         with:
           text: ${{ steps.curr-dotenv.outputs.version }}
           regex: '^([${{ steps.bump_version.outputs.next-version }}]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$'
       - name: Version Is correct
-        if: ${{ failure() }} && ${{ steps.regex-match.outputs.match != '' }}
-        run: echo "::error::Version in .env is incorrect. Should be set to ${{ steps.bump_version.outputs.next-version }}"
+        if: && ${{ steps.regex-match.outputs.match != '' }}
+        run: exit 1
