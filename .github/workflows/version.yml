@@ -5,8 +5,8 @@ name: Breaking Changes
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the select branch(es)
-  push:
-    branches: [develop]
+  # push:
+  #   branches: [develop]
   pull_request:
     branches: [master]
 
@@ -14,20 +14,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
+  check-for-breaking-changes:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out head branch
+      - name: Check out current branch
         uses: actions/checkout@v2
         with:
-          path: head
-      - name: Check out master branch
+          path: current
+      - name: Check out production branch
         uses: actions/checkout@v2
         with:
           ref: main
-          path: base
-      - name: Run OpenAPI Diff (from HEAD revision)
+          path: prod
+      - name: Run OpenAPI Diff (from CURRENT revision)
         uses: mvegter/openapi-diff-action@v0.23.3
         with:
-          head-spec: head/reference/api.v1.yaml
-          base-spec: base/reference/api.v1.yaml
+          head-spec: current/reference/api.v1.yaml
+          base-spec: prod/reference/api.v1.yaml
+      - name: Get PROD Version From .ENV
+        if: ${{ failure() }}
+        uses: falti/dotenv-action@v0.2.5
+        with:
+          log-variables: true
+          path: prod/.env
+        id: prod-dotenv
+      - name: Bump release version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.prod-dotenv.outputs.version }}
+          version-fragment: 'major'
+      - name: Get CURRENT Version From .ENV
+        uses: falti/dotenv-action@v0.2.5
+        with:
+          log-variables: true
+          path: current/.env
+        id: curr-dotenv
+      - name: SEMVER STRING
+        uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.event.comment.body }}
+          regex: '^([${{ steps.bump_version.outputs.next-version }}]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$'
+      - name: Version Is correct
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        run: echo "::error::Version in .env is incorrect. Should be set to ${{ steps.bump_version.outputs.next-version }}"
