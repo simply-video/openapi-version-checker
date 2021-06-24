@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
   contact:
-    email: '2@2.com'
+    email: '2@2222.com'
     name: ''
     url: 'www.x.com'
 servers:
@@ -31,7 +31,7 @@ paths:
             format: int32
       responses:
         '200':
-          description: A paged array of pets
+          description: A paged array of pets dsgdjhsjdsjhd
           headers:
             x-next:
               description: A link to the next page of responses
