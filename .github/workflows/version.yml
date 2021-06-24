@@ -26,14 +26,16 @@ jobs:
           ref: main
           path: prod
       - name: Run OpenAPI Diff (from CURRENT revision)
+        continue-on-error: true
         uses: mvegter/openapi-diff-action@v0.23.3
         with:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
+        id: ref-check
   check-env-version:
     needs: [check-for-breaking-changes]
     runs-on: ubuntu-latest
-    if: needs.check-for-breaking-changes.result == 'failure'
+    if: needs.check-for-breaking-changes.steps.ref-check.outcome == 'failure'
     steps:
       - name: Bump release version
         id: bump_version
