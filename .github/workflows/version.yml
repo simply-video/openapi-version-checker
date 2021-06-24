@@ -26,22 +26,22 @@ jobs:
           ref: main
           path: prod
       - name: Run OpenAPI Diff (from CURRENT revision)
+        continue-on-error: true
         uses: mvegter/openapi-diff-action@v0.23.3
         with:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
-      - name: Get PROD Version From .ENV
-        if: ${{ failure() }}
-        uses: falti/dotenv-action@v0.2.5
-        with:
-          log-variables: true
-          path: prod/.env
-        id: prod-dotenv
   check-env-version:
     needs: [check-for-breaking-changes]
     runs-on: ubuntu-latest
     if: needs.check-for-breaking-changes.result == 'failure'
     steps:
+      - name: Get PROD Version From .ENV
+        uses: falti/dotenv-action@v0.2.5
+        with:
+          log-variables: true
+          path: prod/.env
+        id: prod-dotenv
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
