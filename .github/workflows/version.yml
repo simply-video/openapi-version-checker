@@ -32,9 +32,8 @@ jobs:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
         id: ref-check
-      - run: echo ${{ steps.ref-check.outcome == 'success' }}
       - name: Get PROD Version From .ENV
-        if: ${{ steps.ref-check.outcome }} == 'failure'
+        if: ${{ steps.ref-check.outcome == 'failure' }} 
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
@@ -55,7 +54,7 @@ jobs:
           path: current/.env
         id: curr-dotenv
       - name: SEMVER STRING
-        if: ${{ steps.ref-check.outcome }} == 'failure'
+        if: ${{ steps.ref-check.outcome == 'failure' }} 
         uses: actions-ecosystem/action-regex-match@v2
         id: regex-match
         with:
