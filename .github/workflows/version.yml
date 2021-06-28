@@ -35,7 +35,7 @@ jobs:
   check-major-version:
     runs-on: ubuntu-latest
     needs: check-for-breaking-changes
-    if: ${{ steps.ref-check.outcome == 'failure' }} 
+    # if: ${{ steps.ref-check.outcome == 'failure' }} 
     steps:
       - name: Get PROD Version From .ENV
         uses: falti/dotenv-action@v0.2.5
