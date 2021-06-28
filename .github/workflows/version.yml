@@ -41,7 +41,7 @@ jobs:
           path: prod/.env
         id: prod-dotenv
       - name: Bump release version
-        if: ${{ steps.ref-check.outcome }} == 'failure'
+        if: ${{ steps.ref-check.outcome == 'failure' }} 
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
