@@ -16,7 +16,7 @@ tags:
 paths:
   /pets:
     get:
-      description: 'something else'
+      description: 'something elsss'
       summary: List all pets
       operationId: listPets
       tags:
