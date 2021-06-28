@@ -32,36 +32,37 @@ jobs:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
         id: ref-check
+  check-major-version:
+    runs-on: ubuntu-latest
+    needs: check-for-breaking-changes
+    if: ${{ steps.ref-check.outcome == 'failure' }} 
+    steps:
       - name: Get PROD Version From .ENV
-        if: ${{ steps.ref-check.outcome == 'failure' }} 
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
           path: prod/.env
         id: prod-dotenv
       - name: Bump release version
-        if: ${{ !cancelled() }}
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.prod-dotenv.outputs.version }}
           version-fragment: 'major'
       - name: Get CURRENT Version From .ENV
-        if: ${{ !cancelled() }}
         uses: falti/dotenv-action@v0.2.5
         with:
           log-variables: true
           path: current/.env
         id: curr-dotenv
       - name: SEMVER STRING
-        if: ${{ !cancelled() }}
         uses: actions-ecosystem/action-regex-match@v2
         id: regex-match
         with:
           text: ${{ steps.curr-dotenv.outputs.version }}
           regex: '^([${{ steps.bump_version.outputs.next-version }}]+)\.([0-9]+)\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+)?$'
       - name: Version Is Not Correct
-        if: ${{ !cancelled() }} && ${{ steps.regex-match.outputs.match == '' }}
+        if: ${{ steps.regex-match.outputs.match == '' }}
         run: |
           echo "::error Version Should Be ${{ steps.bump_version.outputs.next-version }}"
           exit 1
