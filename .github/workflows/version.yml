@@ -32,7 +32,7 @@ jobs:
           head-spec: current/reference/api.v1.yaml
           base-spec: prod/reference/api.v1.yaml
         id: ref-check
-      - run: echo steps.ref-check.outcome
+      - run: echo ${{steps.ref-check.outcome}}
       - name: Get PROD Version From .ENV
         if: ${{ steps.ref-check.outcome }} == 'failure'
         uses: falti/dotenv-action@v0.2.5
